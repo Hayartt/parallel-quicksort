@@ -6,10 +6,8 @@
  * Run:      ./quicksort
  *
  * Input:    Number of elements in the array
- * Output:   A random array before and after applying the serial quicksort algorithm
  *
- * Errors:   																		????
- * Note:     																		????
+ * Errors:   Invalid number of arguments. (Exit: -2)
  *
  */
 #include <stdio.h>
@@ -81,7 +79,7 @@ void print_arr(
 
 /*-------------------------------------------------------------------
  * Function:   quicksort
- * Purpose:    Sort the array	(Conquer task)
+ * Purpose:    Sort the array	(Conquer)
  * In args:    arr:		the array to be sorted
  *             first:	
  *             last:		
@@ -100,7 +98,7 @@ void quicksort(
 
 /*-------------------------------------------------------------------
  * Function:   partition
- * Purpose:    Partition the array into two subarrays/subproblems	(Divide task)
+ * Purpose:    Partition the array into two subarrays/subproblems	(Divide)
  * In args:    arr:		the array to be sorted
  *             first:	
  *             last:	
@@ -121,9 +119,9 @@ int partition (
 		return store_index + 1;
 }
 
-/*----------------------------------------------------------:---------
+/*-------------------------------------------------------------------
  * Function:   swap
- * Purpose:    Swaps two elements in an array											(Auxiliary function)
+ * Purpose:    Swaps two elements in an array	(Auxiliary function)
  * In args:    i:		The pointer of an element in the array
  *             j:		The pointer of another element in the array
  */
@@ -135,7 +133,7 @@ void swap (
 		*j = temp;
 }
 
-/*----------------------------------------------------------:---------
+/*-------------------------------------------------------------------
  * Function:   verify
  * Purpose:    Verifies that an array is sorted in ascending order	(Auxiliary function)
  * In args:    arr:		The array to be verified
