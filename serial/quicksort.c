@@ -23,7 +23,9 @@ int verify(int arr[], int n);
 
 /*------------------------------------------------------------------*/
 
-int main(int argc, char* argv[]) {
+int main(
+	int argc, 
+	char* argv[]) {
 	if (argc < 2) {
 		printf("Invalid number of arguments\n");
 		return -2;
@@ -44,13 +46,12 @@ int main(int argc, char* argv[]) {
 /*-------------------------------------------------------------------
  * Function:   rand_arr_gen
  * Purpose:    Generates n random integer values in the range [1,n] to fill an array.	(Auxiliary function)
- * In args:    arr:		array
- *             n:		size of the array
+ * In args:    arr:		Array
+ *             n:		Size of the array
  */
 void rand_arr_gen(
-	int arr[]	/* out */,
-	int n		/* in  */
-	) {
+	int arr[],
+	int n) {
 		
 	// Initialize random number generator
 	srand(time(NULL));
@@ -68,8 +69,8 @@ void rand_arr_gen(
  *             n:      the number of elements in the array
  */
 void print_arr(
-	int arr[]	/* in  */, 
-	int n		/* in  */) {
+	int arr[], 
+	int n) {
 	int i;
 	for (i = 0; i < n; i++) {
 		printf("%d ", arr[i]);
@@ -80,9 +81,9 @@ void print_arr(
 /*-------------------------------------------------------------------
  * Function:   quicksort
  * Purpose:    Sort the array	(Conquer)
- * In args:    arr:		the array to be sorted
- *             first:	
- *             last:		
+ * In args:    arr:		The array to be sorted
+ *             first:	The first index in the array/subarray
+ *             last:	The last index in the array/subarray
  */
 void quicksort(
 	int arr[], 
@@ -99,9 +100,9 @@ void quicksort(
 /*-------------------------------------------------------------------
  * Function:   partition
  * Purpose:    Partition the array into two subarrays/subproblems	(Divide)
- * In args:    arr:		the array to be sorted
- *             first:	
- *             last:	
+ * In args:    arr:		The array to be sorted
+ *             first:	The first index in the array/subarray
+ *             last:	The last index in the array/subarray
  */
 int partition (
 	int arr[], 
@@ -126,8 +127,8 @@ int partition (
  *             j:		The pointer of another element in the array
  */
 void swap (
-	int* i		/* in  */,
-	int* j		/* in  */) {
+	int* i,
+	int* j) {
 		int temp = *i;
 		*i = *j;
 		*j = temp;
