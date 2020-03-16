@@ -8,11 +8,6 @@
  *
  * Ithread_countut:    Number of elements in the array. (n)
  *			 Number of processes. (thread_count)
- * Output:   A random array before and after applying the parallel quicksort algorithm
- *
- * Errors:   n is not divisible by thread_count.
- *			 
- * Note:     																		????
  *
  */
 #include <stdio.h>
@@ -38,18 +33,20 @@ int main(int argc, char* argv[]) {
 	int n = strtol(argv[1], NULL, 10);
 	int thread_count = strtol(argv[2], NULL, 10);
 	int a[n];
-	//for (int i = 0; i < 1000; i++) {
-		//printf("in verify loop %d\n", i);
-		rand_arr_gen(a, n);
-		print_arr(a, n);
-		#  pragma omp parallel num_threads(thread_count) 
-		{
-			run(a, n);
-		}
+	for (int i = 0; i < 1000; i++) {
+		#	pragma omp parallel num_threads(thread_count) \
+		default(none) shared(a, n)
+		{ // start parallel block
+			#	pragma omp single nowait
+			{
+				rand_arr_gen(a,n);
+				quicksort(a, 0, n - 1);
+			}
+		} // end of parallel block
 		if (verify(a, n) == 0) {
 			printf("failed\n");
-		}
-	//}
+		} // non-parallel validation for the result
+	}
 	return 0;
 }
 
@@ -69,7 +66,7 @@ void rand_arr_gen(
 
 	int i;
 	for (i = 0; i < n; i++) {
-		arr[i] = (rand() % n) + 1; 
+		arr[i] = (rand() % 101) + 1; 
 	}
 }
 
@@ -103,8 +100,14 @@ void quicksort(
 		int partition_index;
 		if (first < last) {
 			partition_index = partition(arr, first, last);
-			quicksort(arr, first, partition_index - 1);
-			quicksort(arr, partition_index + 1, last);
+			#	pragma omp task default(none) firstprivate(arr, first, partition_index)
+			{
+				quicksort(arr, first, partition_index - 1);
+			}
+			#	pragma omp task default(none) firstprivate(arr, partition_index, last)
+			{
+				quicksort(arr, partition_index + 1, last);
+			}
 		}
 }
 
@@ -131,7 +134,7 @@ int partition (
 		return store_index + 1;
 }
 
-/*----------------------------------------------------------:---------
+/*-------------------------------------------------------------------
  * Function:   swap
  * Purpose:    Swaps two elements in an array	(Auxiliary function)
  * In args:    i:		The pointer of an element in the array
@@ -145,7 +148,7 @@ void swap (
 		*j = temp;
 }
 
-/*----------------------------------------------------------:---------
+/*-------------------------------------------------------------------
  * Function:   verify
  * Purpose:    Verifies that an array is sorted in ascending order	(Auxiliary function)
  * In args:    arr:		The array to be verified
@@ -160,18 +163,4 @@ int verify (
 			}
 		}
 		return 1;
-}
-
-void run(
-	int arr[],
-	int n) {
-		int my_rank = omp_get_thread_num();
-		int thread_count = omp_get_num_threads();
-		int local_n = n / thread_count;
-		int first = my_rank * local_n;
-		int last = first + local_n;
-		quicksort(arr, first, last);
-		printf("Local sort: \n");
-		print_arr(&arr[first], local_n);
-		//printf("Thread %d of %d local_n %d\n", my_rank, thread_count, local_n);
 }
