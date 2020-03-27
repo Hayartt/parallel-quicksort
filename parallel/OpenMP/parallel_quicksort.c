@@ -4,7 +4,8 @@
  *
  * Compile:  gcc -g -Wall -fopenmp -o parallel_quicksort parallel_quicksort.c
  * 		 or	 clang -Xpreprocessor -fopenmp -I/usr/local/include -L/usr/local/lib -lomp  parallel_quicksort.c -o parallel_quicksort
- * Run:      ./parallel_quicksort [n] [thread_count]
+ * Run:      Performance Evaluation:	./parallel_quicksort [initial array size] [initial thread count] 1
+ * 			 Normal Execution:			./parallel_quicksort [n] [thread_count] 0
  *
  * Ithread_countut:    Number of elements in the array. (n)
  *			 Number of processes. (thread_count)
@@ -22,33 +23,92 @@ int partition(int arr[], int first, int last);
 void swap(int* i, int* j);
 int verify(int arr[], int n);
 void run(int arr[], int n);
+void Usage(char* prog_name);
+void copy_arr(int src[], int dest[], int n);
+
+double start, elapsed;
 
 /*------------------------------------------------------------------*/
-
 int main(int argc, char* argv[]) {
-	if (argc < 3) {
-		printf("Invalid number of arguments\n");
+	if (argc < 4) {
+		Usage(argv[0]);
 		return -2;
 	}
 	int n = strtol(argv[1], NULL, 10);
 	int thread_count = strtol(argv[2], NULL, 10);
-	int a[n];
-	for (int i = 0; i < 1000; i++) {
-		#	pragma omp parallel num_threads(thread_count) \
-		default(none) shared(a, n)
-		{ // start parallel block
-			#	pragma omp single nowait
-			{
-				rand_arr_gen(a,n);
-				quicksort(a, 0, n - 1);
+	int timed_opt = strtol(argv[3], NULL, 2);
+	if (timed_opt) {			/*	timed execution	*/ 
+		for (int j = n; j <= n * 16; j *= 2) {
+			int a[j], b[j];
+			rand_arr_gen(a,j); // generate random array for tests
+			copy_arr(a,b,j); // copy into temp array for in-place sorting by i processes
+			for (int i = thread_count; i <= thread_count*16; i*=2) {
+				#	pragma omp parallel num_threads(i) \
+				default(none) shared(b, j)
+				{ // start parallel block
+					#	pragma omp single nowait
+					{
+						start = omp_get_wtime();
+						quicksort(b, 0, j - 1);
+					}
+				} // end of parallel block
+				printf("np=%d and sz=%d:\t\t%f\tmilliseconds\n", i,j, (elapsed * 1000));
+				if (verify(b, j) == 0) {
+					printf("failed\n");
+				} // non-parallel validation for the result
+				copy_arr(a,b,j); // rewrite b to be the same for all parallel tests (values of i)
 			}
-		} // end of parallel block
-		if (verify(a, n) == 0) {
-			printf("failed\n");
-		} // non-parallel validation for the result
+		}
+	} else {			/*	normal execution	*/ 
+		int a[n];
+		for (int i = 0; i < 1000; i++) {
+			rand_arr_gen(a,n);
+			#	pragma omp parallel num_threads(thread_count) \
+			default(none) shared(a, n)
+			{ // start parallel block
+				#	pragma omp single nowait // single process executes this block
+				{
+					start = omp_get_wtime(); // start the timer
+					quicksort(a, 0, n - 1);
+				}
+			} // end of parallel block
+			//printf("Parallel time: %f milliseconds\n", (elapsed * 1000));
+			if (verify(a, n) == 0) {
+				printf("failed\n");
+			} // non-parallel validation for the result
+		}
 	}
 	return 0;
 }
+
+/*--------------------------------------------------------------------
+ * Function:    copy_arr
+ * Purpose:     Copies the contents of an array src to an array dest of the same size
+ * In arg:      the source, the destination array, and the size n
+ */
+void copy_arr(
+	int src[],	/* in  */
+	int dest[]	/* out */,
+	int n		/* in  */) {
+		for (int i = 0; i < n; i++) {
+			dest[i] = src[i];
+		}
+}  /* copy_arr */
+
+
+/*--------------------------------------------------------------------
+ * Function:    Usage
+ * Purpose:     Print command line for function and terminate
+ * In arg:      prog_name
+ */
+void Usage(char* prog_name) {
+
+   fprintf(
+	   stderr, 
+	   "usage:\nNormal execution:\t%s <array size> <number of threads> 0\nor\nPerformance comparison\t%s <initial array size> <initial number of threads> 1\n", 
+	   prog_name,
+	   prog_name);
+}  /* Usage */
 
 /*-------------------------------------------------------------------
  * Function:   rand_arr_gen
@@ -109,14 +169,17 @@ void quicksort(
 				quicksort(arr, partition_index + 1, last);
 			}
 		}
+		else {
+			elapsed = omp_get_wtime() - start; // finished sorting the subarray ---> should contain to the latest process work time
+		}
 }
 
 /*-------------------------------------------------------------------
  * Function:   partition
  * Purpose:    Partition the array into two subarrays/subproblems	(Divide task)
  * In args:    arr:		the array to be sorted
- *             first:	
- *             last:	
+ *             first:	index to the first element in the partition
+ *             last:	index to the last element in the partition
  */
 int partition (
 	int arr[], 
