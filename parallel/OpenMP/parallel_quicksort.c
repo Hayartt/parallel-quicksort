@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	int timed_opt = strtol(argv[3], NULL, 2);
 	
 	if (timed_opt) {			/*	timed execution	*/ 
-		for (int j = n; j <= n * 16; j *= 2) { // array size loop
+		for (int j = n; j <= n * 32; j *= 2) { // array size loop
 
 			a = (int*) (malloc(j * sizeof(int)));
 			b = (int*) (malloc(j * sizeof(int)));
