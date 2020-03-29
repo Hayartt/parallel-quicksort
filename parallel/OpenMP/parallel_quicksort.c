@@ -129,7 +129,7 @@ void rand_arr_gen(
 
 	int i;
 	for (i = 0; i < n; i++) {
-		arr[i] = (rand() % 101) + 1; 
+		arr[i] = (rand() % n) + 1; 
 	}
 }
 
