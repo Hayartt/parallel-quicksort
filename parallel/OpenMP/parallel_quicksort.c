@@ -39,13 +39,13 @@ int main(int argc, char* argv[]) {
 	int timed_opt = strtol(argv[3], NULL, 2);
 	
 	if (timed_opt) {			/*	timed execution	*/ 
-		for (int j = n; j <= n * 32; j *= 2) { // array size loop
+		for (int j = n; j <= n * 16; j *= 2) { // array size loop
 
 			a = (int*) (malloc(j * sizeof(int)));
 			b = (int*) (malloc(j * sizeof(int)));
 			rand_arr_gen_two(a, b, j); // generate random array for tests
 
-			for (int i = thread_count; i <= thread_count * 16; i*=2) { // thread count loop
+			for (int i = thread_count; i <= thread_count * 32; i*=2) { // thread count loop
 
 				start = omp_get_wtime();
 				parallel_quicksort(b, j, i);
@@ -56,9 +56,9 @@ int main(int argc, char* argv[]) {
 				if (verify(b, j) == 0) {
 					printf("failed\n");
 				} // non-parallel validation for the result
-
 				copy_arr(a,b,j); // rewrite b to be the same for all parallel tests (values of i)
 			}
+			printf("----------------------------------------------------------------\n");
 			free(a);
 			free(b);
 		}
