@@ -3,12 +3,12 @@
  * Purpose:  Demonstrate and evaluate parallel quicksort.
  *
  * Compile:  gcc -g -Wall -fopenmp -o parallel_quicksort parallel_quicksort.c
- * 		 or	 clang -Xpreprocessor -fopenmp -I/usr/local/include -L/usr/local/lib -lomp  parallel_quicksort.c -o parallel_quicksort
+ * 	or:  clang -Xpreprocessor -fopenmp -I/usr/local/include -L/usr/local/lib -lomp  parallel_quicksort.c -o parallel_quicksort
  * Run:      Performance Evaluation:	./parallel_quicksort [initial array size] [initial thread count] 1
- * 			 Normal Execution:			./parallel_quicksort [n] [thread_count] 0
+ * 	     Normal Execution:		./parallel_quicksort [n] [thread_count] 0
  *
  * Input:    Number of elements in the array. (n)
- *			 Number of processes. (thread_count)
+ *	     Number of processes. (thread_count)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -115,8 +115,8 @@ void Usage(char* prog_name) {
 /*-------------------------------------------------------------------
  * Function:   rand_arr_gen
  * Purpose:    Generates n random integer values in the range [1,n] to fill an array.	(Auxiliary function)
- * In args:    arr:		array
- *             n:		size of the array
+ * In args:    arr:	array
+ *             n:	size of the array
  */
 void rand_arr_gen(
 	int arr[]	/* out */,
@@ -136,8 +136,8 @@ void rand_arr_gen(
  * Function:   rand_arr_gen_two
  * Purpose:    Generates n random integer values in the range [1,n] to fill two arraies.	(Auxiliary function)
  * In args:    arr1:	array
- * 			   arr1:	array
- *             n:		size of the array
+ *	       arr1:	array
+ *             n:	size of the array
  */
 void rand_arr_gen_two(
 	int arr1[]	/* out */,
@@ -174,8 +174,8 @@ void print_arr(
 /*-------------------------------------------------------------------
  * Function:   verify
  * Purpose:    Verifies that an array is sorted in ascending order	(Auxiliary function)
- * In args:    arr:		The array to be verified
- *             n:		The number of elements in that array
+ * In args:    arr:	The array to be verified
+ *             n:	The number of elements in that array
  */
 int verify (
 	int arr[], 
