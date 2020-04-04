@@ -15,9 +15,9 @@ void swap(int* i, int* j);
 /*-------------------------------------------------------------------
  * Function:   parallel_quicksort
  * Purpose:    initiate parallel sort on an array
- * In args:    arr:		the array to be sorted
+ * In args:    arr:	the array to be sorted
  *               n:     the size of the array 
- *    thread_count:	    number of threads
+ *    thread_count:	number of threads
  */
 void parallel_quicksort(
 	int arr[], 
@@ -37,9 +37,9 @@ void parallel_quicksort(
 /*-------------------------------------------------------------------
  * Function:   quicksort
  * Purpose:    Sort the array in parallel
- * In args:    arr:		the array to be sorted
- *             first:	
- *             last:		
+ * In args:    arr:	the array to be sorted
+ *             first:	index of the first element
+ *             last:	index of the last element
  */
 void quicksort(
 	int arr[], 
@@ -62,8 +62,8 @@ void quicksort(
 
 /*-------------------------------------------------------------------
  * Function:   partition
- * Purpose:    Partition the array into two subarrays/subproblems
- * In args:    arr:		the array to be sorted
+ * Purpose:    Partition the array/subarray into two subarrays/subproblems
+ * In args:    arr:	the array to be sorted
  *             first:	index to the first element in the partition
  *             last:	index to the last element in the partition
  */
@@ -87,12 +87,12 @@ int partition (
 /*-------------------------------------------------------------------
  * Function:   swap
  * Purpose:    Swaps two elements in an array	(Auxiliary function)
- * In args:    i:		The pointer of an element in the array
- *             j:		The pointer of another element in the array
+ * In args:    i:	The pointer of an element in the array
+ *             j:	The pointer of another element in the array
  */
 void swap (
-	int* i		/* in  */,
-	int* j		/* in  */) {
+	int* i	/* in  */,
+	int* j	/* in  */) {
 		int temp = *i;
 		*i = *j;
 		*j = temp;
