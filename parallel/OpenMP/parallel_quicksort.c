@@ -66,12 +66,14 @@ int main(int argc, char* argv[]) {
 		a = (int*) (malloc(n * sizeof(int)));
 		//for (int i = 0; i < 1000; i++) { 
 			rand_arr_gen(a,n);
-			
+			printf("Array before sorting: ");
+			print_arr(a,n);
 			start = omp_get_wtime();
 			parallel_quicksort(a, n, thread_count);
 			elapsed = omp_get_wtime() - start;
-
-			printf("Parallel time: %f milliseconds\n", (elapsed * 1000));
+			printf("Array after sorting: ");
+			print_arr(a,n);
+			printf("Finished in %f milliseconds\n", (elapsed * 1000));
 			if (verify(a, n) == 0) {
 				printf("failed\n");
 			} // non-parallel validation for the result
