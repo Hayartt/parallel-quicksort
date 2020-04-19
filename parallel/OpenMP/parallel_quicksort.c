@@ -46,12 +46,19 @@ int main(int argc, char* argv[]) {
 			rand_arr_gen_two(a, b, j); // generate random array for tests
 
 			for (int i = thread_count; i <= thread_count * 32; i*=2) { // thread count loop
-
+				if (j <= 100) {
+					printf("Array before sorting: ");
+					print_arr(b,j);
+				}
 				start = omp_get_wtime();
 				parallel_quicksort(b, j, i);
 				elapsed = omp_get_wtime() - start;
-
+				if (j <= 100) {
+					printf("Array after sorting: ");
+					print_arr(b,j);
+				}
 				printf("np=%d\t|\tsz=%d:\t\t%f\tseconds\n", i,j, (elapsed));
+				printf("\n");
 
 				if (verify(b, j) == 0) {
 					printf("failed\n");
@@ -66,13 +73,17 @@ int main(int argc, char* argv[]) {
 		a = (int*) (malloc(n * sizeof(int)));
 		//for (int i = 0; i < 1000; i++) { 
 			rand_arr_gen(a,n);
-			printf("Array before sorting: ");
-			print_arr(a,n);
+			if (n <= 100) {
+				printf("Array before sorting: ");
+				print_arr(a,n);
+			}
 			start = omp_get_wtime();
 			parallel_quicksort(a, n, thread_count);
 			elapsed = omp_get_wtime() - start;
-			printf("Array after sorting: ");
-			print_arr(a,n);
+			if (n <= 100) {
+				printf("Array after sorting: ");
+				print_arr(a,n);
+			}
 			printf("Finished in %f milliseconds\n", (elapsed * 1000));
 			if (verify(a, n) == 0) {
 				printf("failed\n");
